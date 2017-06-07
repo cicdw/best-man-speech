@@ -9,6 +9,12 @@ from gensim import corpora
 
 nlp = spacy.load('en')
 
+try:
+    from ._words import stoppers, replacements
+except ImportError:
+    stoppers = {}
+    replacements = {}
+
 
 class Email(object):
 
@@ -81,8 +87,9 @@ class Worker(object):
 
     def _replace_word(self, word):
         for inputs, outputs in self.replacements.items():
-            if inputs in outputs:
+            if inputs in word:
                 return outputs
+        return word
 
     def clean_msg(self, msg):
         out = []
@@ -136,6 +143,6 @@ class Worker(object):
             self._matrix = matrix
             return matrix
 
-    def __init__(self, stoppers=None, replacements=None):
+    def __init__(self, stoppers=stoppers, replacements=replacements):
         self.replacements = replacements
         self.stoppers = stoppers

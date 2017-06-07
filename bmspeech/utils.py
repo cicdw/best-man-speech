@@ -18,12 +18,13 @@ def create_local_vec(keys, mapper):
     return lv / lv.sum()
 
 
-def generate_string_from_weights(eig, worker, stop_words={}):
+def generate_counts_from_weights(eig, worker, stop_words={}, scale=1e3):
     fake_counts = {}
-    fake_vals = (eig * 1e3).round().tolist()
+    fake_vals = (eig * scale).round().tolist()
     for idx, val in enumerate(fake_vals):
         word = worker[idx]
         if word in stop_words:
             pass
         else:
             fake_counts[word] = max(val, 1)
+    return fake_counts
